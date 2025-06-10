@@ -28,19 +28,19 @@ def DefineLuz():
     luz_ambiente = [0.4, 0.4, 0.4]
     luz_difusa = [0.7, 0.7, 0.7]
     luz_especular = [0.9, 0.9, 0.9]
-    posicao_luz = [2.0, 3.0, 0.0]  # PosiÃ§Ã£o da Luz
+    posicao_luz = [2.0, 3.0, 0.0]  # Posição da Luz
     especularidade = [1.0, 1.0, 1.0]
 
     # ****************  Fonte de Luz 0
 
     glEnable(GL_COLOR_MATERIAL)
 
-    #Habilita o uso de iluminaÃ§Ã£o
+    #Habilita o uso de iluminação
     glEnable(GL_LIGHTING)
 
     #Ativa o uso da luz ambiente
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, luz_ambiente)
-    # Define os parametros da luz nÃºmero Zero
+    # Define os parametros da luz número Zero
     glLightfv(GL_LIGHT0, GL_AMBIENT, luz_ambiente)
     glLightfv(GL_LIGHT0, GL_DIFFUSE, luz_difusa)
     glLightfv(GL_LIGHT0, GL_SPECULAR, luz_especular)
@@ -53,9 +53,9 @@ def DefineLuz():
     # Define a reflectancia do material
     glMaterialfv(GL_FRONT, GL_SPECULAR, especularidade)
 
-    # Define a concentraÃ§Ã£oo do brilho.
+    # Define a concentração do brilho.
     # Quanto maior o valor do Segundo parametro, mais
-    # concentrado serÃ¡ o brilho. (Valores vÃ¡lidos: de 0 a 128)
+    # concentrado será o brilho. (Valores válidos: de 0 a 128)
     glMateriali(GL_FRONT, GL_SHININESS, 51)
 
 def PosicUser():
@@ -123,11 +123,7 @@ def desenha():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
     glMatrixMode(GL_MODELVIEW)
-
-    DesenhaPiso()
     #DesenhaCubo()    
-    o.Desenha()
-    o.DesenhaWireframe()
     o.DesenhaVertices()
 
     glutSwapBuffers()

@@ -2,6 +2,7 @@ from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from OpenGL.GL import *
 from Objeto3D import *
+from Particula import Particula
 
 import math
 
@@ -9,6 +10,7 @@ o:Objeto3D
 
 frame = 0
 estado = 'PLAY'
+
 particulas = []
 explodiu = False
 
@@ -137,9 +139,22 @@ def desenha():
         angulo = 30 * math.sin(frame * 0.05)  # rotação suave
         o.rotation = (0, 1, 0, angulo)
         o.DesenhaVertices()
+
     else:
-        # Aqui entra a fase 2 (desfazimento da cabeça em partículas)
-        pass  # vamos implementar isso já já
+        # Quando explode pela primeira vez, cria partículas a partir dos vértices da cabeça
+        if not explodiu:
+            for v in o.vertices:
+                particulas.append(Particula(v))
+            explodiu = True
+
+        # Desenha e atualiza todas as partículas
+        glColor3f(0, 0, 0)
+        glPointSize(5)
+        glBegin(GL_POINTS)
+        for p in particulas:
+            p.atualizar(frame)
+            p.desenhar()
+        glEnd()
 
     glutSwapBuffers()
 
@@ -178,6 +193,7 @@ def main():
 
     try:
         # Inicia o processamento e aguarda interacoes do usuario
+        glutIdleFunc(glutPostRedisplay)  # chama redesenho automaticamente
         glutMainLoop()
     except SystemExit:
         pass

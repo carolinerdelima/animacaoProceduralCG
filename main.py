@@ -164,6 +164,24 @@ def desenha():
             p.desenhar()
         glEnd()
 
+    elif frame < 1100:
+        glColor3f(0, 0, 0)
+        glPointSize(5)
+        glBegin(GL_POINTS)
+        for p in particulas:
+            p.atualizar_explosao(frame)
+            p.desenhar()
+        glEnd()
+
+    elif frame < 1200:
+        glColor3f(0, 0, 0)
+        glPointSize(5)
+        glBegin(GL_POINTS)
+        for p in particulas:
+            p.atualizar_reconstrucao(frame)
+            p.desenhar()
+        glEnd()
+
     else:
         # reconstrói a cabeça ou reinicia
         glColor3f(0, 0, 0)

@@ -67,3 +67,28 @@ class Particula:
     def desenhar(self):
         from OpenGL.GL import glVertex3f
         glVertex3f(self.posicao.x, self.posicao.y, self.posicao.z)
+
+    def atualizar_explosao(self, frame):
+        t = frame - 1000
+        if t > 100:
+            t = 100
+        tempo_normalizado = t / 100.0
+
+        angulo = self.fase_angular + self.velocidade_angular * t
+        raio = tempo_normalizado * self.raio_espiral * self.escala_raio
+
+        self.posicao.x = raio * math.cos(angulo)
+        self.posicao.z = raio * math.sin(angulo)
+        self.posicao.y = tempo_normalizado * 5.0
+
+
+    def atualizar_reconstrucao(self, frame):
+        t = frame - 1100
+        if t > 100:
+            t = 100
+        tempo_normalizado = t / 100.0
+
+        # Interpolação linear do ponto atual até a origem
+        self.posicao.x = self.posicao.x * (1 - tempo_normalizado) + self.origem.x * tempo_normalizado
+        self.posicao.y = self.posicao.y * (1 - tempo_normalizado) + self.origem.y * tempo_normalizado
+        self.posicao.z = self.posicao.z * (1 - tempo_normalizado) + self.origem.z * tempo_normalizado

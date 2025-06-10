@@ -42,6 +42,13 @@ class Objeto3D:
         glPushMatrix()
         glTranslatef(self.position.x, self.position.y, self.position.z)
         glRotatef(self.rotation[3], self.rotation[0], self.rotation[1], self.rotation[2])
+        
+        # Gira levemente para a esquerda
+        glRotatef(50, 0, 1, 0)
+
+        # Aplica rotação adicional de 180° no eixo Y para virar a face para frente
+        glRotatef(180, 0, 1, 0)
+        
         glColor3f(0.0, 0.0, 0.0)
         glPointSize(8)
 

@@ -1,14 +1,20 @@
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from OpenGL.GL import *
-
 from Objeto3D import *
+
+import math
 
 o:Objeto3D
 
+frame = 0
+estado = 'PLAY'
+particulas = []
+explodiu = False
+
 def init():
     global o
-    glClearColor(0.5, 0.5, 0.9, 1.0)
+    glClearColor(0.85, 0.85, 0.85, 1.0)
     glClearDepth(1.0)
 
     glDepthFunc(GL_LESS)
@@ -73,10 +79,10 @@ def PosicUser():
     # As três próximas especificam o ponto de foco nos eixos x, y e z
     # As três últimas especificam o vetor up
     # https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/gluLookAt.xml
-    gluLookAt(-2, 6, -8, 0, 0, 0, 0, 1.0, 0)
+    gluLookAt(0, 2, 6, 0, 2, 0, 0, 1, 0)
 
 def DesenhaLadrilho():
-    glColor3f(0.5, 0.5, 0.5)  # desenha QUAD preenchido
+    glColor3f(0.85, 0.85, 0.85)  # mesma cor do fundo
     glBegin(GL_QUADS)
     glNormal3f(0, 1, 0)
     glVertex3f(-0.5, 0.0, -0.5)
@@ -85,17 +91,11 @@ def DesenhaLadrilho():
     glVertex3f(0.5, 0.0, -0.5)
     glEnd()
 
-    glColor3f(1, 1, 1)  # desenha a borda da QUAD
-    glBegin(GL_LINE_STRIP)
-    glNormal3f(0, 1, 0)
-    glVertex3f(-0.5, 0.0, -0.5)
-    glVertex3f(-0.5, 0.0, 0.5)
-    glVertex3f(0.5, 0.0, 0.5)
-    glVertex3f(0.5, 0.0, -0.5)
-    glEnd()
 
 def DesenhaPiso():
     glPushMatrix()
+    glDisable(GL_LIGHTING)  # <--- desliga iluminação, pra desenhar o piso invisível	
+
     glTranslated(-20, -1, -10)
     for x in range(-20, 20):
         glPushMatrix()
@@ -104,6 +104,8 @@ def DesenhaPiso():
             glTranslated(0, 0, 1)
         glPopMatrix()
         glTranslated(1, 0, 0)
+
+    glEnable(GL_LIGHTING)   # <--- reativa iluminação, pra usar no resto da cena
     glPopMatrix()
 
 def DesenhaCubo():
@@ -120,14 +122,26 @@ def DesenhaCubo():
     glPopMatrix()
 
 def desenha():
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    global frame, estado, particulas, explodiu
 
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glMatrixMode(GL_MODELVIEW)
-    #DesenhaCubo()    
-    o.DesenhaVertices()
+
+    if estado == 'PLAY':
+        frame += 1
+
+    DesenhaPiso()
+
+    if frame < 200:
+        # Cabeça gira alternando para direita/esquerda
+        angulo = 30 * math.sin(frame * 0.05)  # rotação suave
+        o.rotation = (0, 1, 0, angulo)
+        o.DesenhaVertices()
+    else:
+        # Aqui entra a fase 2 (desfazimento da cabeça em partículas)
+        pass  # vamos implementar isso já já
 
     glutSwapBuffers()
-    pass
 
 def teclado(key, x, y):
     o.rotation = (1, 0, 0, o.rotation[3] + 2)    
@@ -143,13 +157,13 @@ def main():
     glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH)
 
     # Especifica o tamnho inicial em pixels da janela GLUT
-    glutInitWindowSize(640, 480)
+    glutInitWindowSize(400, 400)
 
     # Especifica a posição de início da janela
     glutInitWindowPosition(100, 100)
 
     # Cria a janela passando o título da mesma como argumento
-    glutCreateWindow(b'Computacao Grafica - 3D')
+    glutCreateWindow(b'T2 - CG')
 
     # Função responsável por fazer as inicializações
     init()
@@ -159,6 +173,8 @@ def main():
 
     # Registra a funcao callback para tratamento das teclas ASCII
     glutKeyboardFunc(teclado)
+
+    glutIdleFunc(desenha)
 
     try:
         # Inicia o processamento e aguarda interacoes do usuario

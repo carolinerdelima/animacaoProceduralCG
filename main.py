@@ -134,12 +134,13 @@ def desenha():
 
     DesenhaPiso()
 
-    if frame < 200:
-        angulo = 30 * math.sin(frame * 0.05)
-        o.rotation = (0, 1, 0, angulo)
+    if frame < 320:
+        angulo_y = 30 * math.sin(frame * 0.02)
+        angulo_x = 15 * math.cos(frame * 0.02)
+        o.rotation = (angulo_x, angulo_y)
         o.DesenhaVertices()
 
-    elif frame < 700:
+    elif frame < 820:
         if not explodiu:
             particulas.clear()
             for v in o.vertices:
@@ -154,7 +155,7 @@ def desenha():
             p.desenhar()
         glEnd()
 
-    elif frame < 1000:
+    elif frame < 1120:
         glColor3f(0, 0, 0)
         glPointSize(5)
         glBegin(GL_POINTS)

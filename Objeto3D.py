@@ -9,7 +9,7 @@ class Objeto3D:
         self.vertices = []
         self.faces    = []
         self.position = Ponto(0,0,0)
-        self.rotation = (0,0,0,0)
+        self.rotation = (0, 0)  # (angulo_x, angulo_y)
         pass
 
     def LoadFile(self, file:str):
@@ -46,8 +46,11 @@ class Objeto3D:
     def DesenhaVertices(self):
         glPushMatrix()
         glTranslatef(self.position.x, self.position.y, self.position.z)
-        glRotatef(self.rotation[3], self.rotation[0], self.rotation[1], self.rotation[2])
-        
+
+        angulo_x, angulo_y = self.rotation
+        glRotatef(angulo_y, 0, 1, 0)
+        glRotatef(angulo_x, 1, 0, 0)
+
         glColor3f(0.0, 0.0, 0.0)
         glPointSize(8)
 
@@ -55,9 +58,8 @@ class Objeto3D:
         for v in self.vertices:
             glVertex(v.x, v.y, v.z)
         glEnd()
-        
+
         glPopMatrix()
-        pass
 
     def DesenhaWireframe(self):
         glPushMatrix()

@@ -19,47 +19,47 @@ class Particula:
         self.tempo_quique = None
 
         # Propriedades para fase de funil
-        self.frame_inicio_funil = 700  # constante para controle
+        self.frame_inicio_funil = 700
         self.fase_angular = random.uniform(0, 2 * math.pi)
         self.velocidade_angular = random.uniform(0.05, 0.12)
-        self.velocidade_vertical = random.uniform(0.03, 0.06)
+        self.velocidade_vertical = random.uniform(0.01, 0.03)
         self.raio_espiral = math.sqrt(origem.x**2 + origem.z**2) + random.uniform(-0.2, 0.2)
         self.altura_inicial = self.posicao.y
+        self.escala_raio = 1.0 + random.uniform(0.5, 1.5)
+
+        # Tempo de ativação escalonado
+        self.frame_ativacao = self.frame_inicio_funil + random.randint(0, 100)
 
     def atualizar(self, frame):
         if frame < self.frame_inicio_funil:
-            # Queda e quique
             self.vy += self.gravidade
             self.posicao.x += self.vx
             self.posicao.y += self.vy
             self.posicao.z += self.vz
 
-            # Colisão com o chão
             if self.posicao.y < 0:
                 self.posicao.y = 0
-                self.vy *= -0.5  # perde energia no quique
+                self.vy *= -0.5
                 if abs(self.vy) < 0.001:
                     self.vy = 0
 
     def atualizar_fase_funil(self, frame):
-        t = frame - self.frame_inicio_funil
-        if t < 0:
-            return
+        if frame < self.frame_ativacao:
+            return  # ainda não ativou a subida
 
-        tempo_normalizado = t / 200.0  # controle de tempo para ajustar afunilamento
+        t = frame - self.frame_ativacao
+        tempo_normalizado = t / 200.0
         tempo_normalizado = min(tempo_normalizado, 1.0)
 
         angulo = self.fase_angular + self.velocidade_angular * t
 
-        # Raio diminui conforme o tempo avança (funil afunila)
         raio = self.raio_espiral * (1.0 - tempo_normalizado)
-        raio = max(raio, 0.05)  # evita colapso total
+        raio *= self.escala_raio
+        raio = max(raio, 0.02)
 
         self.posicao.x = raio * math.cos(angulo)
         self.posicao.z = raio * math.sin(angulo)
-
-        # Altura sobe proporcional ao tempo
-        self.posicao.y = self.altura_inicial + (tempo_normalizado * 5.0)
+        self.posicao.y = 0 + tempo_normalizado * 5.0
 
     def resetar_para_origem(self):
         self.posicao = Ponto(self.origem.x, self.origem.y, self.origem.z)

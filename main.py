@@ -135,24 +135,41 @@ def desenha():
     DesenhaPiso()
 
     if frame < 200:
-        # Cabeça gira alternando para direita/esquerda
-        angulo = 30 * math.sin(frame * 0.05)  # rotação suave
+        angulo = 30 * math.sin(frame * 0.05)
         o.rotation = (0, 1, 0, angulo)
         o.DesenhaVertices()
 
-    else:
-        # Quando explode pela primeira vez, cria partículas a partir dos vértices da cabeça
+    elif frame < 700:
         if not explodiu:
+            particulas.clear()
             for v in o.vertices:
                 particulas.append(Particula(v))
             explodiu = True
 
-        # Desenha e atualiza todas as partículas
         glColor3f(0, 0, 0)
         glPointSize(5)
         glBegin(GL_POINTS)
         for p in particulas:
             p.atualizar(frame)
+            p.desenhar()
+        glEnd()
+
+    elif frame < 1000:
+        glColor3f(0, 0, 0)
+        glPointSize(5)
+        glBegin(GL_POINTS)
+        for p in particulas:
+            p.atualizar_fase_funil(frame)
+            p.desenhar()
+        glEnd()
+
+    else:
+        # reconstrói a cabeça ou reinicia
+        glColor3f(0, 0, 0)
+        glPointSize(5)
+        glBegin(GL_POINTS)
+        for p in particulas:
+            p.resetar_para_origem()
             p.desenhar()
         glEnd()
 

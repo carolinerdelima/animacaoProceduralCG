@@ -186,7 +186,30 @@ def desenha():
     glutSwapBuffers()
 
 def teclado(key, x, y):
-    o.rotation = (1, 0, 0, o.rotation[3] + 2)    
+    global estado, frame, explodiu, particulas, o
+
+    if key == b' ': # Barra de espaço para pausar ou continuar
+        if estado == 'PLAY':
+            estado = 'PAUSE'
+        else:
+            estado = 'PLAY'
+    elif key == b'r': # 'r' para REWIND
+        frame = max(0, frame - 10) # Retrocede 10 frames, mas não abaixo de 0
+        explodiu = False # Reseta o estado da explosão ao retroceder
+    elif key == b'f': # 'f' para FORWARD
+        frame = min(1200, frame + 10) # Avança 10 frames, mas não além do frame máximo
+        if frame >= 700 and not explodiu: # Se avançar para a fase de explosão, reinicializa as partículas
+            particulas.clear()
+            for v in o.vertices:
+                particulas.append(Particula(v))
+            explodiu = True
+    elif key == b'q': # 'q' para resetar
+        frame = 0
+        estado = 'PLAY' # Volta para o estado de play depos de resetar
+        explodiu = False
+        particulas.clear() # Limpa as partículas existentes
+        o = Objeto3D() # Recarrega o objeto para resetar sua posição/rotação
+        o.LoadFile('Human_Head.obj') # regarrega dnv o modelo
 
     glutPostRedisplay()
     pass

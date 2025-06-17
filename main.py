@@ -165,7 +165,7 @@ def desenha():
             p.desenhar()
         glEnd()
 
-    elif frame < 1200:
+    elif frame < 1250:
         glColor3f(0, 0, 0)
         glPointSize(5)
         glBegin(GL_POINTS)
@@ -174,14 +174,14 @@ def desenha():
             p.desenhar()
         glEnd()
 
-    elif frame == 1200:
+    elif frame == 1250:
         # Prepara transformação para o coração
         verticesCoracao = gerarPontosCoracao(len(particulas))
         for i in range(len(particulas)):
             particulas[i].destino = verticesCoracao[i % len(verticesCoracao)]
             particulas[i].frameInicioTransformacao = frame
 
-    elif frame > 1200:
+    elif frame > 1250:
         glColor3f(0, 0, 0)
         glPointSize(5)
         glBegin(GL_POINTS)

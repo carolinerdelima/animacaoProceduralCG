@@ -174,13 +174,19 @@ def desenha():
             p.desenhar()
         glEnd()
 
-    else:
-        # reconstrói a cabeça ou reinicia
+    elif frame == 1200:
+        # Prepara transformação para o coração
+        verticesCoracao = gerarPontosCoracao(len(particulas))
+        for i in range(len(particulas)):
+            particulas[i].destino = verticesCoracao[i % len(verticesCoracao)]
+            particulas[i].frameInicioTransformacao = frame
+
+    elif frame > 1200:
         glColor3f(0, 0, 0)
         glPointSize(5)
         glBegin(GL_POINTS)
         for p in particulas:
-            p.resetarParaOrigem()
+            p.atualizarTransformacaoParaDestino(frame)
             p.desenhar()
         glEnd()
 

@@ -3,6 +3,7 @@ from OpenGL.GLU import *
 from OpenGL.GL import *
 from Objeto3D import *
 from Particula import Particula
+from HeartGenerator import gerarPontosCoracao
 
 import math
 
@@ -160,7 +161,7 @@ def desenha():
         glPointSize(5)
         glBegin(GL_POINTS)
         for p in particulas:
-            p.atualizar_fase_funil(frame)
+            p.atualizarFaseFunil(frame)
             p.desenhar()
         glEnd()
 
@@ -169,7 +170,7 @@ def desenha():
         glPointSize(5)
         glBegin(GL_POINTS)
         for p in particulas:
-            p.atualizar_descida_reconstrucao(frame)
+            p.atualizarDescidaReconstrucao(frame)
             p.desenhar()
         glEnd()
 
@@ -179,7 +180,7 @@ def desenha():
         glPointSize(5)
         glBegin(GL_POINTS)
         for p in particulas:
-            p.resetar_para_origem()
+            p.resetarParaOrigem()
             p.desenhar()
         glEnd()
 

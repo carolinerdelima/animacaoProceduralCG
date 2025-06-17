@@ -7,21 +7,23 @@ class Particula:
         self.origem = origem
         self.posicao = Ponto(origem.x, origem.y, origem.z)
 
-        # Velocidade inicial para a queda
-        self.vy = 0
+        # Trepidação, atribuindo valores aleatórios em x e y
         self.vx = random.uniform(-0.01, 0.01)
         self.vz = random.uniform(-0.01, 0.01)
+
+        # Parte responsável pela queda (gravidade + velocidade vertical)
+        self.vy = 0
         self.gravidade = -0.001
 
-        # Fase inicial: queda
+        # Movimento de subida em espiral
         self.frameInicioFunil = 700
-        self.faseAngular = random.uniform(0, 2 * math.pi)
-        self.velocidadeAngular = random.uniform(0.05, 0.12)
-        self.velocidadeVertical = random.uniform(0.01, 0.03)
-        self.raioEspiral = math.sqrt(origem.x**2 + origem.z**2) + random.uniform(-0.2, 0.2)
+        self.faseAngular = random.uniform(0, 2 * math.pi) # define o ângulo inicial da partícula na espiral
+        self.velocidadeAngular = random.uniform(0.05, 0.12) # define a velocidade com que ela gira em torno do eixo Y
+        self.velocidadeVertical = random.uniform(0.01, 0.03) # velocidade de subida
+        self.raioEspiral = math.sqrt(origem.x**2 + origem.z**2) + random.uniform(-0.2, 0.2) # distância radial inicial da partícula em relação ao eixo central
         self.alturaInicial = 0
         self.escalaRaio = 1.0 + random.uniform(0.5, 1.5)
-        self.frameAtivacao = self.frameInicioFunil + random.randint(0, 100)
+        self.frameAtivacao = self.frameInicioFunil + random.randint(0, 100) # faz com que as partículas não comecem todas juntas
 
         # Parâmetros de reconstrução
         self.frameInicioReconstrucao = 1000 + random.randint(0, 100)
@@ -48,9 +50,15 @@ class Particula:
             return
 
         t = frame - self.frameAtivacao
+
+        # isso garante que o movimento dure cerca de 200 frames, e depois pare
         tempoNormalizado = t / 200.0
         tempoNormalizado = min(tempoNormalizado, 1.0)
 
+        # Enquanto o tempo avança:
+        # O raio vai diminuindo, fazendo as partículas irem para o centro do funil
+        # O ângulo aumenta, então elas giram
+        # A posição y sobe gradualmente
         angulo = self.faseAngular + self.velocidadeAngular * t
         raio = self.raioEspiral * (1.0 - tempoNormalizado)
         raio *= self.escalaRaio

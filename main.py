@@ -90,7 +90,7 @@ def DesenhaLadrilho():
 
 def DesenhaPiso():
     glPushMatrix()
-    glDisable(GL_LIGHTING)  # <--- desliga iluminação, pra desenhar o piso invisível	
+    glDisable(GL_LIGHTING)  # <- desliga iluminação, pra desenhar o piso invisível	
 
     glTranslated(-20, -1, -10)
     for x in range(-20, 20):
@@ -101,7 +101,7 @@ def DesenhaPiso():
         glPopMatrix()
         glTranslated(1, 0, 0)
 
-    glEnable(GL_LIGHTING)   # <--- reativa iluminação, pra usar no resto da cena
+    glEnable(GL_LIGHTING)   # <- reativa iluminação, pra usar no resto da cena
     glPopMatrix()
 
 def DesenhaCubo():

@@ -15,6 +15,10 @@ estado = 'PLAY'
 particulas = []
 explodiu = False
 
+# Variáveis de posição da câmera
+eyeX, eyeY, eyeZ = 0, 2, 6
+lookX, lookY, lookZ = 0, 2, 0
+
 def init():
     global o
     glClearColor(0.85, 0.85, 0.85, 1.0)
@@ -29,8 +33,6 @@ def init():
     o.LoadFile('Human_Head.obj')
 
     DefineLuz()
-    PosicUser()
-
 
 def DefineLuz():
     # Define cores para um objeto dourado
@@ -67,22 +69,13 @@ def DefineLuz():
     # concentrado será o brilho. (Valores válidos: de 0 a 128)
     glMateriali(GL_FRONT, GL_SHININESS, 51)
 
-def PosicUser():
+def atualizarCamera():
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
-
-    # Configura a matriz da projeção perspectiva (FOV, proporção da tela, distância do mínimo antes do clipping, distância máxima antes do clipping
-    # https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/gluPerspective.xml
-    gluPerspective(60, 16/9, 0.01, 50)  # Projecao perspectiva
+    gluPerspective(60, 16/9, 0.01, 50)
     glMatrixMode(GL_MODELVIEW)
     glLoadIdentity()
-
-    #Especifica a matriz de transformação da visualização
-    # As três primeiras variáveis especificam a posição do observador nos eixos x, y e z
-    # As três próximas especificam o ponto de foco nos eixos x, y e z
-    # As três últimas especificam o vetor up
-    # https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/gluLookAt.xml
-    gluLookAt(0, 2, 6, 0, 2, 0, 0, 1, 0)
+    gluLookAt(eyeX, eyeY, eyeZ, lookX, lookY, lookZ, 0, 1, 0)
 
 def DesenhaLadrilho():
     glColor3f(0.85, 0.85, 0.85)  # mesma cor do fundo
@@ -129,6 +122,9 @@ def desenha():
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glMatrixMode(GL_MODELVIEW)
+
+    # Controle de câmera
+    atualizarCamera()
 
     if estado == 'PLAY':
         frame += 1
@@ -194,8 +190,31 @@ def desenha():
 
 def teclado(key, x, y):
     global estado, frame, explodiu, particulas, o
+    global eyeX, eyeY, eyeZ, lookX, lookY, lookZ
 
-    if key == b' ': # Barra de espaço para pausar ou continuar
+    movimento = 0.2
+    zoom = 0.2
+
+    # Movimento da câmera com WASD
+    if key == b'w':  # Sobe
+        eyeY += movimento
+        lookY += movimento
+    elif key == b's':  # Desce
+        eyeY -= movimento
+        lookY -= movimento
+    elif key == b'a':  # Esquerda
+        eyeX -= movimento
+        lookX -= movimento
+    elif key == b'd':  # Direita
+        eyeX += movimento
+        lookX += movimento
+    elif key == b'z':  # Aproxima
+        eyeZ -= zoom
+    elif key == b'x':  # Afastar
+        eyeZ += zoom
+
+    # Controle de vídeo
+    elif key == b' ': # Barra de espaço para pausar ou continuar
         if estado == 'PLAY':
             estado = 'PAUSE'
         else:
@@ -219,7 +238,6 @@ def teclado(key, x, y):
         o.LoadFile('Human_Head.obj') # regarrega dnv o modelo
 
     glutPostRedisplay()
-    pass
 
 def main():
 

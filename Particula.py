@@ -17,10 +17,10 @@ class Particula:
 
         # Movimento de subida em espiral
         self.frameInicioFunil = 700
-        self.faseAngular = random.uniform(0, 2 * math.pi) # define o ângulo inicial da partícula na espiral
-        self.velocidadeAngular = random.uniform(0.05, 0.12) # faz girar em círculo
-        self.velocidadeVertical = random.uniform(0.01, 0.03) # velocidade de subida
-        self.raioEspiral = math.sqrt(origem.x**2 + origem.z**2) + random.uniform(-0.2, 0.2) # distância radial inicial da partícula em relação ao eixo central
+        self.faseAngular = random.uniform(0, 2 * math.pi)
+        self.velocidadeAngular = random.uniform(0.05, 0.12)
+        self.velocidadeVertical = random.uniform(0.01, 0.03)
+        self.raioEspiral = math.sqrt(origem.x**2 + origem.z**2) + random.uniform(-0.2, 0.2)
         self.alturaInicial = 0
         self.escalaRaio = 1.0 + random.uniform(0.5, 1.5)
         self.frameAtivacao = self.frameInicioFunil + random.randint(0, 100) # faz com que as partículas não comecem todas juntas

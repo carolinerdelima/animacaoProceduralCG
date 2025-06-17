@@ -34,13 +34,18 @@ class Particula:
 
     def atualizar(self, frame):
         if frame < self.frameInicioFunil:
-            self.vy += self.gravidade
+            self.vy += self.gravidade # queda vertical (eixo Y)
+
+            # Trepidação horizontal
             self.posicao.x += self.vx
             self.posicao.y += self.vy
             self.posicao.z += self.vz
 
+            # se a partícula passar da altura y = 0 (o chão da cena), ela bate no chão
             if self.posicao.y < 0:
                 self.posicao.y = 0
+
+                # rebote para cima
                 self.vy *= -0.5
                 if abs(self.vy) < 0.001:
                     self.vy = 0
